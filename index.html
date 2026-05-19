@@ -2,43 +2,98 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kemzi Studio - Seguimiento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Kemzi Studio - Seguimiento de Pedidos</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Segoe UI',Roboto,sans-serif;background:#1D1D1D;min-height:100vh;padding:20px}
-        .container{max-width:500px;margin:0 auto}
-        .header{background:#2A2A2A;border-radius:20px;padding:20px;text-align:center;margin-bottom:24px}
-        .logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
-        .logo-icon{background:rgba(0,204,188,0.15);padding:10px;border-radius:14px}
-        .logo h1{color:white;font-size:20px}
-        .header p{color:#A5A5A5;font-size:13px}
-        .search-box{background:#2A2A2A;border-radius:16px;padding:6px;display:flex;gap:10px;margin-bottom:24px;border:1px solid rgba(0,204,188,0.2)}
-        .search-box input{flex:1;background:transparent;border:none;padding:12px 16px;color:white;outline:none}
-        .search-box input::placeholder{color:#666}
-        .search-box button{background:#00CCBC;border:none;border-radius:12px;padding:0 20px;color:white;font-weight:600;cursor:pointer}
-        .info-card,.timeline{background:#2A2A2A;border-radius:20px;padding:20px;margin-bottom:20px}
-        .tracking-code{color:#00CCBC;font-size:12px;margin-bottom:12px}
-        .customer-name{color:white;font-size:20px;font-weight:bold;margin-bottom:6px}
-        .product-info{color:#A5A5A5;font-size:13px;margin-bottom:4px}
-        .price-info{color:#A5A5A5;margin-top:8px;padding-top:8px;border-top:1px solid #3A3A3A}
-        .timeline-title{color:white;font-size:16px;font-weight:600;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #3A3A3A}
-        .timeline-item{display:flex;margin-bottom:20px;position:relative}
-        .timeline-item:not(:last-child)::before{content:'';position:absolute;left:16px;top:32px;bottom:-20px;width:2px;background:#3A3A3A}
-        .timeline-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:14px;z-index:1}
-        .timeline-icon.completed{background:#00CCBC}
-        .timeline-icon.pending{background:#2A2A2A;border:2px solid #4A4A4A}
-        .timeline-icon.current{background:#00CCBC;box-shadow:0 0 0 4px rgba(0,204,188,0.2)}
-        .timeline-stage{color:white;font-size:15px;font-weight:500}
-        .timeline-stage.current{color:#00CCBC}
-        .timeline-status{font-size:12px;color:#A5A5A5}
-        .error-message,.initial-message{background:#2A2A2A;border-radius:20px;padding:40px 20px;text-align:center}
-        .error-message h3,.initial-message h3{color:white;margin-bottom:8px}
-        .error-message p,.initial-message p{color:#A5A5A5}
-        .loader{display:flex;justify-content:center;padding:60px}
-        .spinner{width:40px;height:40px;border:3px solid #2A2A2A;border-top-color:#00CCBC;border-radius:50%;animation:spin 0.8s linear infinite}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .sync-status{font-size:10px;color:#666;text-align:center;margin-top:16px}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #1D1D1D;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 500px; margin: 0 auto; }
+        .header { background: #2A2A2A; border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 24px; }
+        .logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px; }
+        .logo-icon { background: rgba(0, 204, 188, 0.15); padding: 10px; border-radius: 14px; }
+        .logo h1 { color: white; font-size: 20px; }
+        .header p { color: #A5A5A5; font-size: 13px; }
+        .search-box {
+            background: #2A2A2A;
+            border-radius: 16px;
+            padding: 6px;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(0, 204, 188, 0.2);
+        }
+        .search-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 12px 16px;
+            color: white;
+            outline: none;
+        }
+        .search-box input::placeholder { color: #666; }
+        .search-box button {
+            background: #00CCBC;
+            border: none;
+            border-radius: 12px;
+            padding: 0 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .info-card, .timeline {
+            background: #2A2A2A;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .tracking-code { color: #00CCBC; font-size: 12px; margin-bottom: 12px; }
+        .customer-name { color: white; font-size: 20px; font-weight: bold; margin-bottom: 6px; }
+        .product-info { color: #A5A5A5; font-size: 13px; margin-bottom: 4px; }
+        .price-info { color: #A5A5A5; margin-top: 8px; padding-top: 8px; border-top: 1px solid #3A3A3A; }
+        .timeline-title { color: white; font-size: 16px; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #3A3A3A; }
+        .timeline-item { display: flex; margin-bottom: 20px; position: relative; }
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 16px;
+            top: 32px;
+            bottom: -20px;
+            width: 2px;
+            background: #3A3A3A;
+        }
+        .timeline-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 14px;
+            z-index: 1;
+        }
+        .timeline-icon.completed { background: #00CCBC; }
+        .timeline-icon.pending { background: #2A2A2A; border: 2px solid #4A4A4A; }
+        .timeline-icon.current { background: #00CCBC; box-shadow: 0 0 0 4px rgba(0, 204, 188, 0.2); }
+        .timeline-stage { color: white; font-size: 15px; font-weight: 500; }
+        .timeline-stage.current { color: #00CCBC; }
+        .timeline-status { font-size: 12px; color: #A5A5A5; }
+        .error-message, .initial-message {
+            background: #2A2A2A;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .error-message h3, .initial-message h3 { color: white; margin-bottom: 8px; }
+        .error-message p, .initial-message p { color: #A5A5A5; }
+        .loader { display: flex; justify-content: center; padding: 60px; }
+        .spinner { width: 40px; height: 40px; border: 3px solid #2A2A2A; border-top-color: #00CCBC; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .sync-status { font-size: 10px; color: #666; text-align: center; margin-top: 16px; }
     </style>
 </head>
 <body>
@@ -61,60 +116,48 @@
     </div>
 
     <script>
-        // 🔁 CAMBIA ESTA URL POR LA DE TU GOOGLE SHEETS (publicada como CSV)
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQTC7OpVD0fXe9hONmGGjWaCCRUb2YSF2LDRO9T1JZaAj__3rW04uoOpNjM6KYjfuPCvuiLVTujMRlm/pub?output=csv';
-        
         let pedidos = [];
-        let ultimaActualizacion = null;
 
-        const etapasRopa = [
-            "Abono recibido","En diseño","Diseño aprobado","En impresión",
-            "En planchado","En confección","Control de calidad","Listo para entregar","Entregado"
-        ];
-        const etapasPromo = [
-            "Abono recibido","En diseño","Diseño aprobado","En impresión",
-            "Control de calidad","Listo para entregar","Entregado"
-        ];
+        const etapasRopa = ["Abono recibido","En diseño","Diseño aprobado","En impresión","En planchado","En confección","Control de calidad","Listo para entregar","Entregado"];
+        const etapasPromo = ["Abono recibido","En diseño","Diseño aprobado","En impresión","Control de calidad","Listo para entregar","Entregado"];
         const productosRopa = ["Chaquetas","Franelas","Jersey"];
 
-        function obtenerEtapas(tipoProducto) {
-            return productosRopa.includes(tipoProducto) ? etapasRopa : etapasPromo;
+        function obtenerEtapas(tipo) {
+            return productosRopa.includes(tipo) ? etapasRopa : etapasPromo;
         }
 
         async function cargarPedidos() {
+            const statusDiv = document.getElementById('estadoSincronizacion');
             try {
-                document.getElementById('estadoSincronizacion').innerHTML = '🔄 Cargando datos...';
-                const respuesta = await fetch(CSV_URL + '?t=' + Date.now());
-                const csv = await respuesta.text();
-                const lineas = csv.split('\n');
-                if (lineas.length < 2) throw new Error('Sin datos');
-                
-                const encabezados = lineas[0].split(',').map(h => h.trim());
-                pedidos = [];
-                
-                for (let i = 1; i < lineas.length; i++) {
-                    if (!lineas[i].trim()) continue;
-                    const valores = lineas[i].split(',').map(v => v.trim());
-                    const pedido = {};
-                    for (let j = 0; j < encabezados.length; j++) {
-                        pedido[encabezados[j]] = valores[j] || '';
-                    }
-                    if (pedido.trackingCode) pedidos.push(pedido);
+                statusDiv.innerHTML = '🔄 Cargando datos...';
+                // Agregar parámetro anti-caché
+                const url = 'orders.json?v=' + new Date().getTime();
+                const respuesta = await fetch(url);
+                if (!respuesta.ok) {
+                    throw new Error(`HTTP ${respuesta.status}: ${respuesta.statusText}`);
                 }
-                
-                ultimaActualizacion = new Date();
-                document.getElementById('estadoSincronizacion').innerHTML = `✅ ${pedidos.length} pedidos · ${ultimaActualizacion.toLocaleTimeString()}`;
+                const texto = await respuesta.text();
+                // Intentar parsear JSON
+                try {
+                    pedidos = JSON.parse(texto);
+                } catch (e) {
+                    throw new Error('El archivo orders.json no es un JSON válido: ' + e.message);
+                }
+                if (!Array.isArray(pedidos)) {
+                    throw new Error('El JSON no es un array de pedidos');
+                }
+                const ahora = new Date();
+                statusDiv.innerHTML = `✅ ${pedidos.length} pedidos · ${ahora.toLocaleTimeString()}`;
                 console.log('Pedidos cargados:', pedidos.length);
             } catch(e) {
                 console.error('Error:', e);
-                document.getElementById('estadoSincronizacion').innerHTML = '⚠️ Error al cargar datos. Verifica que la hoja sea pública.';
+                statusDiv.innerHTML = `⚠️ Error: ${e.message}. Asegúrate de que orders.json exista y sea un array.`;
             }
         }
 
         function buscarPedido() {
             const codigo = document.getElementById('trackingCode').value.trim().toUpperCase();
             const contenedor = document.getElementById('contenido');
-            
             if (!codigo) {
                 contenedor.innerHTML = `<div class="error-message"><h3>Ingresa un código</h3><p>Ej: KEMZI-123456</p></div>`;
                 return;
@@ -122,39 +165,31 @@
 
             contenedor.innerHTML = `<div class="loader"><div class="spinner"></div></div>`;
 
+            // Pequeña demora para mostrar el loader
             setTimeout(() => {
                 const pedido = pedidos.find(p => p.trackingCode === codigo);
-                
                 if (!pedido) {
-                    contenedor.innerHTML = `<div class="error-message"><h3>Pedido no encontrado</h3><p>Verifica el código ingresado</p><button class="btn-refresh" onclick="cargarPedidos()">🔄 Recargar</button></div>`;
+                    contenedor.innerHTML = `<div class="error-message"><h3>Pedido no encontrado</h3><p>Verifica el código</p><button onclick="cargarPedidos()">🔄 Recargar datos</button></div>`;
                     return;
                 }
 
                 const etapas = obtenerEtapas(pedido.productType);
-                const etapaActual = pedido.currentStage;
-                const indiceActual = etapas.indexOf(etapaActual);
+                const indiceActual = etapas.indexOf(pedido.currentStage);
                 const fecha = pedido.createdAt ? new Date(pedido.createdAt) : new Date();
-                const fechaStr = `${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`;
-
-                let timelineHtml = '';
+                let timeline = '';
                 for (let i = 0; i < etapas.length; i++) {
-                    const etapa = etapas[i];
                     const completada = i < indiceActual;
                     const actual = i === indiceActual;
-                    
-                    timelineHtml += `
-                        <div class="timeline-item">
-                            <div class="timeline-icon ${completada ? 'completed' : (actual ? 'current' : 'pending')}">
-                                ${completada ? '✓' : (actual ? '◉' : '○')}
-                            </div>
-                            <div class="timeline-content">
-                                <div class="timeline-stage ${actual ? 'current' : ''}">${etapa}</div>
-                                <div class="timeline-status">${completada ? 'Completado' : (actual ? 'En proceso' : 'Pendiente')}</div>
-                            </div>
+                    timeline += `<div class="timeline-item">
+                        <div class="timeline-icon ${completada ? 'completed' : (actual ? 'current' : 'pending')}">
+                            ${completada ? '✓' : (actual ? '◉' : '○')}
                         </div>
-                    `;
+                        <div class="timeline-content">
+                            <div class="timeline-stage ${actual ? 'current' : ''}">${etapas[i]}</div>
+                            <div class="timeline-status">${completada ? 'Completado' : (actual ? 'En proceso' : 'Pendiente')}</div>
+                        </div>
+                    </div>`;
                 }
-
                 contenedor.innerHTML = `
                     <div class="info-card">
                         <div class="tracking-code">CÓDIGO: ${pedido.trackingCode}</div>
@@ -162,24 +197,27 @@
                         <div class="product-info">${pedido.productType} · Talla ${pedido.size}</div>
                         <div class="product-info">Color: ${pedido.color || 'No especificado'}</div>
                         <div class="product-info">Diseño: ${pedido.design || 'Sin diseño'}</div>
-                        <div class="price-info">Total: $${pedido.amountUsd || '0.00'} · Pedido: ${fechaStr}</div>
+                        <div class="price-info">Total: $${pedido.amountUsd || '0.00'} · Pedido: ${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}</div>
                     </div>
                     <div class="timeline">
                         <div class="timeline-title">📦 Estado del pedido</div>
-                        ${timelineHtml}
+                        ${timeline}
                     </div>
                 `;
             }, 300);
         }
 
-        function obtenerParametro(param) {
+        function obtenerParametro(p) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+            return urlParams.get(p);
         }
 
+        // Cargar pedidos al iniciar
         cargarPedidos();
-        setInterval(cargarPedidos, 60000); // Actualiza cada minuto
+        // Recargar cada 60 segundos
+        setInterval(cargarPedidos, 60000);
         
+        // Si hay código en la URL, buscarlo automáticamente
         const codigoParam = obtenerParametro('code');
         if (codigoParam) {
             document.getElementById('trackingCode').value = codigoParam;
