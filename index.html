@@ -114,7 +114,7 @@
             opacity: 0.9;
         }
 
-        /* Tarjetas con efecto glass */
+        /* Tarjetas */
         .info-card, .timeline {
             background: rgba(53, 53, 53, 0.7);
             backdrop-filter: blur(10px);
@@ -163,7 +163,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Línea de tiempo mejorada */
+        /* Línea de tiempo */
         .timeline-title {
             color: white;
             font-size: 17px;
@@ -260,7 +260,6 @@
             color: #00CCBC;
         }
 
-        /* Mensajes */
         .error-message, .initial-message {
             background: rgba(53, 53, 53, 0.7);
             backdrop-filter: blur(10px);
@@ -354,20 +353,36 @@
     <script>
         let pedidos = [];
 
+        // ========== ETAPAS IGUALES QUE EN LA APP ==========
         const etapasRopa = [
-            "Abono recibido", "En diseño", "Diseño aprobado", "En impresión",
-            "En planchado", "En confección", "Control de calidad", "Listo para entregar", "Entregado"
+            "Abono recibido",
+            "En diseño",
+            "Diseño aprobado",
+            "En impresión",
+            "En planchado",
+            "En confección",
+            "Control de calidad",
+            "Listo para entregar",
+            "Entregado"
         ];
 
         const etapasPromo = [
-            "Abono recibido", "En diseño", "Diseño aprobado", "En impresión",
-            "Control de calidad", "Listo para entregar", "Entregado"
+            "Abono recibido",
+            "En diseño",
+            "Diseño aprobado",
+            "En impresión",
+            "Control de calidad",
+            "Listo para entregar",
+            "Entregado"
         ];
 
         const productosRopa = ["Chaquetas", "Franelas", "Jersey"];
 
-        function obtenerEtapas(tipo) {
-            return productosRopa.includes(tipo) ? etapasRopa : etapasPromo;
+        function obtenerEtapas(tipoProducto) {
+            if (productosRopa.includes(tipoProducto)) {
+                return etapasRopa;
+            }
+            return etapasPromo;
         }
 
         async function cargarPedidos() {
@@ -378,6 +393,7 @@
                 pedidos = await respuesta.json();
                 const ahora = new Date();
                 document.getElementById('estadoSincronizacion').innerHTML = `✅ ${pedidos.length} pedidos · ${ahora.toLocaleTimeString()}`;
+                console.log('Pedidos cargados:', pedidos);
             } catch(e) {
                 document.getElementById('estadoSincronizacion').innerHTML = '⚠️ No hay datos. Usa "Copiar JSON" desde la app.';
             }
@@ -403,9 +419,15 @@
                 }
 
                 const etapas = obtenerEtapas(pedido.productType);
-                const indiceActual = etapas.indexOf(pedido.currentStage);
+                const etapaActual = pedido.currentStage;
+                const indiceActual = etapas.indexOf(etapaActual);
                 const fecha = pedido.createdAt ? new Date(pedido.createdAt) : new Date();
                 const fechaStr = `${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`;
+
+                // Depuración (opcional, para verificar en consola)
+                console.log('Etapas:', etapas);
+                console.log('Etapa actual:', etapaActual);
+                console.log('Índice actual:', indiceActual);
 
                 let timeline = '';
                 for (let i = 0; i < etapas.length; i++) {
