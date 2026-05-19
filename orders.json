@@ -1,0 +1,21 @@
+[]
+
+[
+  {
+    "trackingCode": "KEMZI-001",
+    "customerName": "María González",
+    "productType": "Chaquetas",
+    "size": "M",
+    "color": "Azul marino",
+    "design": "Bordado personalizado",
+    "amountUsd": 25.00,
+    "amountBs": 12879.50,
+    "currentStage": "En confección",
+    "status": "En producción",
+    "createdAt": "2026-05-18T10:00:00.000Z",
+    "scheduledDate": "2026-05-25T10:00:00.000Z",
+    "isDelivery": true,
+    "isShipping": false,
+    "paymentReference": "Pago móvil 04141234567"
+  }
+]
