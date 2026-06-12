@@ -4,207 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Kemzi Studio - Seguimiento de Pedidos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0F0F0F 0%, #1A1A1A 100%);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #1D1D1D;
             min-height: 100vh;
             padding: 20px;
         }
-
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        /* Header con efecto glass */
+        .container { max-width: 500px; margin: 0 auto; }
         .header {
-            background: rgba(53, 53, 53, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 28px;
-            padding: 24px;
+            background: #2A2A2A;
+            border-radius: 20px;
+            padding: 20px;
             text-align: center;
             margin-bottom: 24px;
             border: 1px solid rgba(0, 204, 188, 0.2);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .logo-icon {
-            background: linear-gradient(135deg, #00CCBC, #008B7A);
-            border-radius: 18px;
-            padding: 10px;
-            box-shadow: 0 4px 12px rgba(0, 204, 188, 0.3);
-        }
-
-        .logo-icon svg {
-            width: 28px;
-            height: 28px;
-        }
-
-        .logo h1 {
-            color: white;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .header p {
-            color: #A5A5A5;
-            font-size: 13px;
-            font-weight: 400;
-        }
-
-        /* Buscador */
+        .logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px; }
+        .logo-icon { background: rgba(0, 204, 188, 0.15); padding: 10px; border-radius: 14px; }
+        .logo h1 { color: white; font-size: 20px; }
+        .header p { color: #A5A5A5; font-size: 13px; }
         .search-box {
-            background: rgba(53, 53, 53, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: #2A2A2A;
+            border-radius: 16px;
             padding: 6px;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 24px;
-            border: 1px solid rgba(0, 204, 188, 0.25);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 204, 188, 0.2);
         }
-
         .search-box input {
             flex: 1;
             background: transparent;
             border: none;
-            padding: 14px 16px;
+            padding: 12px 16px;
             color: white;
-            font-size: 14px;
-            font-weight: 400;
             outline: none;
         }
-
-        .search-box input::placeholder {
-            color: #666;
-        }
-
+        .search-box input::placeholder { color: #666; }
         .search-box button {
-            background: linear-gradient(135deg, #00CCBC, #008B7A);
+            background: #00CCBC;
             border: none;
-            border-radius: 16px;
-            padding: 0 24px;
+            border-radius: 12px;
+            padding: 0 20px;
             color: white;
             font-weight: 600;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
         }
-
-        .search-box button:hover {
-            transform: scale(0.98);
-            opacity: 0.9;
-        }
-
-        /* Tarjetas */
-        .info-card, .timeline {
-            background: rgba(53, 53, 53, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
+        .info-card, .timeline, .queue-card {
+            background: #2A2A2A;
+            border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(0, 204, 188, 0.15);
-            transition: transform 0.2s ease;
         }
-
-        .info-card:hover, .timeline:hover {
-            transform: translateY(-2px);
+        .tracking-code { color: #00CCBC; font-size: 12px; margin-bottom: 12px; }
+        .customer-name { color: white; font-size: 20px; font-weight: bold; margin-bottom: 6px; }
+        .product-info { color: #A5A5A5; font-size: 13px; margin-bottom: 4px; }
+        .price-info { color: #A5A5A5; margin-top: 8px; padding-top: 8px; border-top: 1px solid #3A3A3A; }
+        
+        .queue-card {
+            background: linear-gradient(135deg, #00CCBC20, #008B7A10);
+            border: 1px solid #00CCBC40;
         }
-
-        .tracking-code {
-            background: rgba(0, 204, 188, 0.15);
-            display: inline-block;
-            padding: 4px 12px;
+        .queue-title { color: #00CCBC; font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+        .queue-position { font-size: 48px; font-weight: bold; color: #00CCBC; text-align: center; margin: 10px 0; }
+        .queue-label { color: #A5A5A5; font-size: 12px; text-align: center; }
+        .estimated-time {
+            background: #00CCBC20;
             border-radius: 20px;
-            color: #00CCBC;
-            font-size: 11px;
-            font-weight: 600;
-            margin-bottom: 14px;
-            letter-spacing: 0.5px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 16px;
         }
-
-        .customer-name {
-            color: white;
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .product-info {
-            color: #A5A5A5;
-            font-size: 13px;
-            margin-bottom: 6px;
-        }
-
-        .price-info {
-            color: #A5A5A5;
-            font-size: 13px;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Línea de tiempo */
-        .timeline-title {
-            color: white;
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .timeline-item {
-            display: flex;
-            margin-bottom: 24px;
-            position: relative;
-            animation: fadeInUp 0.3s ease forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
+        .estimated-time span { color: #00CCBC; font-weight: bold; }
+        
+        .timeline-title { color: white; font-size: 16px; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #3A3A3A; }
+        .timeline-item { display: flex; margin-bottom: 20px; position: relative; }
         .timeline-item:not(:last-child)::before {
             content: '';
             position: absolute;
             left: 16px;
             top: 32px;
-            bottom: -24px;
+            bottom: -20px;
             width: 2px;
-            background: linear-gradient(180deg, #00CCBC 0%, rgba(0, 204, 188, 0.2) 100%);
+            background: #3A3A3A;
         }
-
         .timeline-icon {
             width: 32px;
             height: 32px;
@@ -214,128 +99,26 @@
             justify-content: center;
             margin-right: 14px;
             z-index: 1;
-            transition: all 0.2s ease;
         }
-
-        .timeline-icon.completed {
-            background: linear-gradient(135deg, #00CCBC, #008B7A);
-            box-shadow: 0 0 0 4px rgba(0, 204, 188, 0.2);
-        }
-
-        .timeline-icon.pending {
-            background: #2A2A2A;
-            border: 2px solid #4A4A4A;
-        }
-
-        .timeline-icon.current {
-            background: linear-gradient(135deg, #00CCBC, #008B7A);
-            box-shadow: 0 0 0 4px rgba(0, 204, 188, 0.3);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 204, 188, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(0, 204, 188, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 204, 188, 0); }
-        }
-
-        .timeline-stage {
-            color: white;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .timeline-stage.current {
-            color: #00CCBC;
-            font-weight: 600;
-        }
-
-        .timeline-status {
-            font-size: 11px;
-            color: #A5A5A5;
-        }
-
-        .timeline-status.completed {
-            color: #00CCBC;
-        }
-
-        .error-message, .initial-message {
-            background: rgba(53, 53, 53, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 48px 24px;
-            text-align: center;
-            border: 1px solid rgba(0, 204, 188, 0.15);
-        }
-
-        .error-message h3, .initial-message h3 {
-            color: white;
-            margin-bottom: 8px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .error-message p, .initial-message p {
-            color: #A5A5A5;
-            font-size: 13px;
-        }
-
-        .loader {
-            display: flex;
-            justify-content: center;
-            padding: 60px;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #2A2A2A;
-            border-top-color: #00CCBC;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .sync-status {
-            font-size: 10px;
-            color: #666;
-            text-align: center;
-            margin-top: 16px;
-        }
-
-        .btn-refresh {
-            background: rgba(0, 204, 188, 0.15);
-            border: 1px solid rgba(0, 204, 188, 0.3);
-            color: #00CCBC;
-            padding: 8px 20px;
-            border-radius: 24px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 16px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-refresh:hover {
-            background: rgba(0, 204, 188, 0.25);
-        }
+        .timeline-icon.completed { background: #00CCBC; }
+        .timeline-icon.pending { background: #2A2A2A; border: 2px solid #4A4A4A; }
+        .timeline-icon.current { background: #00CCBC; box-shadow: 0 0 0 4px rgba(0, 204, 188, 0.2); }
+        .timeline-stage { color: white; font-size: 14px; font-weight: 500; }
+        .timeline-stage.current { color: #00CCBC; }
+        .timeline-status { font-size: 11px; color: #A5A5A5; margin-top: 4px; }
+        .error-message, .initial-message { background: #2A2A2A; border-radius: 20px; padding: 40px 20px; text-align: center; }
+        .error-message h3, .initial-message h3 { color: white; margin-bottom: 8px; }
+        .loader { display: flex; justify-content: center; padding: 60px; }
+        .spinner { width: 40px; height: 40px; border: 3px solid #2A2A2A; border-top-color: #00CCBC; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .sync-status { font-size: 10px; color: #666; text-align: center; margin-top: 16px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="1.5"/>
-                        <path d="M2 17L12 22L22 17" stroke="white" stroke-width="1.5"/>
-                        <path d="M2 12L12 17L22 12" stroke="white" stroke-width="1.5"/>
-                    </svg>
-                </div>
+                <div class="logo-icon">📦</div>
                 <h1>Kemzi Studio</h1>
             </div>
             <p>Seguimiento de pedidos</p>
@@ -353,36 +136,39 @@
     <script>
         let pedidos = [];
 
-        // ========== ETAPAS IGUALES QUE EN LA APP ==========
         const etapasRopa = [
-            "Abono recibido",
-            "En diseño",
-            "Diseño aprobado",
-            "En impresión",
-            "En planchado",
-            "En confección",
-            "Control de calidad",
-            "Listo para entregar",
-            "Entregado"
+            "Abono recibido", "En diseño", "Diseño aprobado", "En impresión",
+            "En planchado", "En confección", "Control de calidad", "Listo para entregar", "Entregado"
         ];
 
         const etapasPromo = [
-            "Abono recibido",
-            "En diseño",
-            "Diseño aprobado",
-            "En impresión",
-            "Control de calidad",
-            "Listo para entregar",
-            "Entregado"
+            "Abono recibido", "En diseño", "Diseño aprobado", "En impresión",
+            "Control de calidad", "Listo para entregar", "Entregado"
         ];
 
         const productosRopa = ["Chaquetas", "Franelas", "Jersey"];
 
         function obtenerEtapas(tipoProducto) {
-            if (productosRopa.includes(tipoProducto)) {
-                return etapasRopa;
-            }
-            return etapasPromo;
+            return productosRopa.includes(tipoProducto) ? etapasRopa : etapasPromo;
+        }
+
+        function calcularPosicionCola(trackingCode) {
+            const activos = pedidos.filter(p => p.currentStage !== 'Entregado');
+            activos.sort((a, b) => {
+                if (a.priority === 'Urgente' && b.priority !== 'Urgente') return -1;
+                if (a.priority !== 'Urgente' && b.priority === 'Urgente') return 1;
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            });
+            const posicion = activos.findIndex(p => p.trackingCode === trackingCode);
+            return posicion >= 0 ? posicion + 1 : -1;
+        }
+
+        function calcularTiempoEstimado(posicion) {
+            const dias = (posicion - 1) * 1.5;
+            if (dias <= 0) return 'En proceso, pronto estará listo';
+            if (dias < 1) return 'Menos de 1 día';
+            if (dias === 1) return 'Aproximadamente 1 día';
+            return `Aproximadamente ${Math.round(dias)} días`;
         }
 
         async function cargarPedidos() {
@@ -391,11 +177,9 @@
                 const respuesta = await fetch('orders.json?v=' + Date.now());
                 if (!respuesta.ok) throw new Error('No se encontró orders.json');
                 pedidos = await respuesta.json();
-                const ahora = new Date();
-                document.getElementById('estadoSincronizacion').innerHTML = `✅ ${pedidos.length} pedidos · ${ahora.toLocaleTimeString()}`;
-                console.log('Pedidos cargados:', pedidos);
+                document.getElementById('estadoSincronizacion').innerHTML = `✅ ${pedidos.length} pedidos · ${new Date().toLocaleTimeString()}`;
             } catch(e) {
-                document.getElementById('estadoSincronizacion').innerHTML = '⚠️ No hay datos. Usa "Copiar JSON" desde la app.';
+                document.getElementById('estadoSincronizacion').innerHTML = '⚠️ Error al cargar datos';
             }
         }
 
@@ -414,50 +198,33 @@
                 const pedido = pedidos.find(p => p.trackingCode === codigo);
                 
                 if (!pedido) {
-                    contenedor.innerHTML = `<div class="error-message"><h3>Pedido no encontrado</h3><p>Verifica el código</p><button class="btn-refresh" onclick="cargarPedidos()">🔄 Recargar datos</button></div>`;
+                    contenedor.innerHTML = `<div class="error-message"><h3>Pedido no encontrado</h3><p>Verifica el código ingresado</p></div>`;
                     return;
                 }
 
                 const etapas = obtenerEtapas(pedido.productType);
                 const etapaActual = pedido.currentStage;
                 const indiceActual = etapas.indexOf(etapaActual);
-                const fecha = pedido.createdAt ? new Date(pedido.createdAt) : new Date();
-                const fechaStr = `${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`;
+                const posicionCola = calcularPosicionCola(pedido.trackingCode);
+                const tiempoEstimado = calcularTiempoEstimado(posicionCola);
+                const fechaCreacion = new Date(pedido.createdAt);
+                const fechaStr = `${fechaCreacion.getDate()}/${fechaCreacion.getMonth()+1}/${fechaCreacion.getFullYear()}`;
+                const totalActivos = pedidos.filter(p => p.currentStage !== 'Entregado').length;
 
-                // Depuración (opcional, para verificar en consola)
-                console.log('Etapas:', etapas);
-                console.log('Etapa actual:', etapaActual);
-                console.log('Índice actual:', indiceActual);
-
-                let timeline = '';
+                let timelineHtml = '';
                 for (let i = 0; i < etapas.length; i++) {
                     const etapa = etapas[i];
                     const completada = i < indiceActual;
                     const actual = i === indiceActual;
                     
-                    let icono = '';
-                    let claseIcono = '';
-                    if (completada) {
-                        icono = '✓';
-                        claseIcono = 'completed';
-                    } else if (actual) {
-                        icono = '◉';
-                        claseIcono = 'current';
-                    } else {
-                        icono = '○';
-                        claseIcono = 'pending';
-                    }
-                    
-                    timeline += `
-                        <div class="timeline-item" style="animation-delay: ${i * 0.05}s">
-                            <div class="timeline-icon ${claseIcono}">
-                                ${icono}
+                    timelineHtml += `
+                        <div class="timeline-item">
+                            <div class="timeline-icon ${completada ? 'completed' : (actual ? 'current' : 'pending')}">
+                                ${completada ? '✓' : (actual ? '◉' : '○')}
                             </div>
                             <div class="timeline-content">
                                 <div class="timeline-stage ${actual ? 'current' : ''}">${etapa}</div>
-                                <div class="timeline-status ${completada ? 'completed' : ''}">
-                                    ${completada ? 'Completado' : (actual ? 'En proceso actualmente' : 'Pendiente')}
-                                </div>
+                                <div class="timeline-status">${completada ? 'Completado' : (actual ? 'En proceso' : 'Pendiente')}</div>
                             </div>
                         </div>
                     `;
@@ -472,11 +239,23 @@
                         <div class="product-info">Diseño: ${pedido.design || 'Sin diseño'}</div>
                         <div class="price-info">Total: $${pedido.amountUsd || '0.00'} · Pedido: ${fechaStr}</div>
                     </div>
-                    <div class="timeline">
-                        <div class="timeline-title">
-                            <span>📦</span> Estado del pedido
+                    
+                    <div class="queue-card">
+                        <div class="queue-title">📊 POSICIÓN EN COLA DE PRODUCCIÓN</div>
+                        <div class="queue-position">#${posicionCola}</div>
+                        <div class="queue-label">de ${totalActivos} pedidos activos</div>
+                        <div class="estimated-time">
+                            ⏱️ <span>Tiempo estimado de entrega:</span><br>
+                            ${tiempoEstimado}
                         </div>
-                        ${timeline}
+                        <div style="font-size: 11px; color: #666; text-align: center; margin-top: 12px;">
+                            ${pedido.priority === 'Urgente' ? '🚨 Prioridad urgente - Se atenderá antes' : '📋 Prioridad normal'}
+                        </div>
+                    </div>
+                    
+                    <div class="timeline">
+                        <div class="timeline-title">📦 Progreso del pedido</div>
+                        ${timelineHtml}
                     </div>
                 `;
             }, 300);
@@ -495,8 +274,13 @@
             document.getElementById('trackingCode').value = codigoParam;
             setTimeout(buscarPedido, 1000);
         } else {
-            document.getElementById('contenido').innerHTML = `<div class="initial-message"><h3>Seguimiento de pedidos</h3><p>Ingresa tu código de seguimiento</p></div>`;
+            document.getElementById('contenido').innerHTML = `
+                <div class="initial-message">
+                    <h3>Seguimiento de pedidos</h3>
+                    <p>Ingresa tu código de seguimiento<br>para ver el estado de tu pedido</p>
+                </div>
+            `;
         }
     </script>
 </body>
-</html>
+</html>    
