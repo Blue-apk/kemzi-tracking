@@ -5,299 +5,254 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Kemzi Studio - Seguimiento de Pedidos</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background-color: #1D1D1D;
-            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #0F0F0F;
+            min-height: 100vh;
             padding: 20px;
-            color: white;
         }
-
-        .container {
-            max-width: 550px;
-            margin: 0 auto;
-        }
-
+        .container { max-width: 500px; margin: 0 auto; }
+        
         /* Header */
         .header {
+            background: #1A1A1A;
+            border-radius: 28px;
+            padding: 20px;
             text-align: center;
             margin-bottom: 24px;
+            border: 1px solid rgba(0, 204, 188, 0.15);
+            backdrop-filter: blur(4px);
         }
-
         .logo {
-            display: inline-flex;
+            display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            background: #2A2A2A;
-            padding: 12px 24px;
-            border-radius: 60px;
-            border: 1px solid rgba(0, 204, 188, 0.2);
+            margin-bottom: 8px;
         }
-
         .logo-icon {
+            background: rgba(0, 204, 188, 0.12);
+            padding: 8px;
+            border-radius: 16px;
             font-size: 24px;
         }
-
         .logo h1 {
-            font-size: 20px;
-            font-weight: 600;
             color: white;
+            font-size: 22px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
         }
-
         .header p {
-            color: #A5A5A5;
+            color: #888;
             font-size: 13px;
-            margin-top: 8px;
         }
-
-        /* Buscador */
+        
+        /* Search box */
         .search-box {
-            background: #2A2A2A;
-            border-radius: 60px;
-            padding: 4px;
+            background: #1A1A1A;
+            border-radius: 20px;
+            padding: 6px;
             display: flex;
-            gap: 8px;
-            border: 1px solid rgba(0, 204, 188, 0.2);
+            gap: 10px;
             margin-bottom: 24px;
+            border: 1px solid rgba(0, 204, 188, 0.2);
         }
-
         .search-box input {
             flex: 1;
             background: transparent;
             border: none;
-            padding: 12px 18px;
+            padding: 12px 16px;
             color: white;
             font-size: 14px;
             outline: none;
         }
-
-        .search-box input::placeholder {
-            color: #666;
-        }
-
+        .search-box input::placeholder { color: #555; }
         .search-box button {
             background: #00CCBC;
             border: none;
-            border-radius: 40px;
+            border-radius: 16px;
             padding: 0 22px;
-            color: #1D1D1D;
+            color: #0F0F0F;
             font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: 0.2s;
         }
-
-        .search-box button:active {
-            opacity: 0.8;
-        }
-
+        .search-box button:hover { background: #00B3A5; }
+        
         /* Tarjetas */
-        .card {
-            background: #2A2A2A;
-            border-radius: 20px;
+        .info-card, .timeline, .queue-card {
+            background: #1A1A1A;
+            border-radius: 24px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(0, 204, 188, 0.1);
+            border: 1px solid rgba(255,255,255,0.05);
         }
-
         .tracking-code {
             color: #00CCBC;
             font-size: 12px;
-            margin-bottom: 12px;
+            font-weight: 500;
             letter-spacing: 0.5px;
+            margin-bottom: 12px;
         }
-
         .customer-name {
+            color: white;
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 6px;
         }
-
         .product-info {
-            color: #A5A5A5;
+            color: #AAA;
             font-size: 13px;
             margin-bottom: 4px;
         }
-
         .price-info {
-            color: #A5A5A5;
+            color: #AAA;
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid #3A3A3A;
+            border-top: 1px solid #2A2A2A;
             font-size: 13px;
         }
-
-        /* Tarjeta de cola */
+        
+        /* Cola */
         .queue-card {
-            background: linear-gradient(135deg, rgba(0, 204, 188, 0.12), rgba(0, 139, 122, 0.05));
-            border: 1px solid rgba(0, 204, 188, 0.3);
+            background: linear-gradient(135deg, rgba(0,204,188,0.08), rgba(0,139,123,0.04));
+            border: 1px solid rgba(0,204,188,0.3);
         }
-
         .queue-title {
             color: #00CCBC;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-
         .queue-position {
-            font-size: 48px;
+            font-size: 52px;
             font-weight: 800;
             color: #00CCBC;
             text-align: center;
-            margin: 10px 0;
             line-height: 1;
+            margin: 8px 0;
         }
-
         .queue-label {
-            color: #A5A5A5;
-            font-size: 13px;
+            color: #999;
+            font-size: 12px;
             text-align: center;
-            margin-bottom: 16px;
         }
-
         .estimated-time {
-            background: rgba(0, 204, 188, 0.1);
-            border-radius: 16px;
+            background: rgba(0,204,188,0.1);
+            border-radius: 20px;
             padding: 12px;
             text-align: center;
-            margin-top: 8px;
+            margin-top: 18px;
         }
-
         .estimated-time span {
             color: #00CCBC;
-            font-weight: 600;
+            font-weight: bold;
         }
-
         .priority-badge {
-            display: inline-block;
-            margin-top: 12px;
             font-size: 11px;
-            background: rgba(0, 204, 188, 0.15);
-            padding: 4px 12px;
-            border-radius: 20px;
             color: #00CCBC;
+            text-align: center;
+            margin-top: 12px;
+            opacity: 0.8;
         }
-
-        /* Timeline */
+        
+        /* Timeline minimalista */
         .timeline-title {
+            color: white;
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #3A3A3A;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border-bottom: 1px solid #2A2A2A;
         }
-
         .timeline-item {
             display: flex;
             margin-bottom: 20px;
             position: relative;
         }
-
         .timeline-item:not(:last-child)::before {
             content: '';
             position: absolute;
-            left: 16px;
+            left: 14px;
             top: 32px;
             bottom: -20px;
-            width: 2px;
-            background: #3A3A3A;
+            width: 1.5px;
+            background: #2A2A2A;
         }
-
         .timeline-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 14px;
-            z-index: 1;
+            z-index: 2;
             font-size: 14px;
             background: #2A2A2A;
-            border: 2px solid #4A4A4A;
-            color: #A5A5A5;
+            color: #777;
         }
-
         .timeline-icon.completed {
             background: #00CCBC;
-            border-color: #00CCBC;
-            color: #1D1D1D;
+            color: #0F0F0F;
         }
-
         .timeline-icon.current {
             background: #00CCBC;
-            border-color: #00CCBC;
-            color: #1D1D1D;
-            box-shadow: 0 0 0 3px rgba(0, 204, 188, 0.2);
+            color: #0F0F0F;
+            box-shadow: 0 0 0 3px rgba(0,204,188,0.2);
         }
-
-        .timeline-content {
-            flex: 1;
+        .timeline-icon.pending {
+            background: #2A2A2A;
+            border: 1px solid #3A3A3A;
+            color: #555;
         }
-
         .timeline-stage {
+            color: #DDD;
             font-size: 14px;
             font-weight: 500;
-            color: white;
         }
-
         .timeline-stage.current {
             color: #00CCBC;
         }
-
         .timeline-status {
             font-size: 11px;
-            color: #A5A5A5;
+            color: #777;
             margin-top: 4px;
         }
-
-        /* Estados vacíos y error */
-        .empty-state, .error-state {
-            text-align: center;
+        
+        /* Estados vacíos */
+        .error-message, .initial-message {
+            background: #1A1A1A;
+            border-radius: 24px;
             padding: 40px 20px;
-            background: #2A2A2A;
-            border-radius: 20px;
-            color: #A5A5A5;
+            text-align: center;
         }
-
-        .empty-state h3, .error-state h3 {
+        .error-message h3, .initial-message h3 {
             color: white;
             margin-bottom: 8px;
+            font-weight: 500;
         }
-
-        .loader {
-            display: flex;
-            justify-content: center;
-            padding: 40px;
+        .error-message p, .initial-message p {
+            color: #888;
+            font-size: 13px;
         }
-
+        .loader { display: flex; justify-content: center; padding: 60px; }
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #2A2A2A;
+            width: 32px;
+            height: 32px;
+            border: 2px solid #2A2A2A;
             border-top-color: #00CCBC;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        @keyframes spin { to { transform: rotate(360deg); } }
         .sync-status {
             font-size: 10px;
-            color: #666;
+            color: #555;
             text-align: center;
             margin-top: 16px;
         }
@@ -307,7 +262,7 @@
     <div class="container">
         <div class="header">
             <div class="logo">
-                <span class="logo-icon">📦</span>
+                <div class="logo-icon">✨</div>
                 <h1>Kemzi Studio</h1>
             </div>
             <p>Seguimiento de pedidos</p>
@@ -352,8 +307,7 @@
             return posicion >= 0 ? posicion + 1 : -1;
         }
 
-        function calcularTiempoEstimado(posicion, prioridad) {
-            if (prioridad === 'Urgente') return 'Prioridad urgente - Se atenderá antes';
+        function calcularTiempoEstimado(posicion) {
             const dias = (posicion - 1) * 1.5;
             if (dias <= 0) return 'En proceso, pronto estará listo';
             if (dias < 1) return 'Menos de 1 día';
@@ -363,12 +317,11 @@
 
         async function cargarPedidos() {
             try {
-                const statusDiv = document.getElementById('estadoSincronizacion');
-                statusDiv.innerHTML = '🔄 Cargando datos...';
+                document.getElementById('estadoSincronizacion').innerHTML = '🔄 Cargando datos...';
                 const respuesta = await fetch('orders.json?v=' + Date.now());
                 if (!respuesta.ok) throw new Error('No se encontró orders.json');
                 pedidos = await respuesta.json();
-                statusDiv.innerHTML = `✅ ${pedidos.length} pedidos · ${new Date().toLocaleTimeString()}`;
+                document.getElementById('estadoSincronizacion').innerHTML = `✅ ${pedidos.length} pedidos · ${new Date().toLocaleTimeString()}`;
             } catch(e) {
                 document.getElementById('estadoSincronizacion').innerHTML = '⚠️ Error al cargar datos';
             }
@@ -379,7 +332,7 @@
             const contenedor = document.getElementById('contenido');
             
             if (!codigo) {
-                contenedor.innerHTML = `<div class="empty-state"><h3>Ingresa un código</h3><p>Ej: KEMZI-123456</p></div>`;
+                contenedor.innerHTML = `<div class="error-message"><h3>Ingresa un código</h3><p>Ej: KEMZI-123456</p></div>`;
                 return;
             }
 
@@ -389,7 +342,7 @@
                 const pedido = pedidos.find(p => p.trackingCode === codigo);
                 
                 if (!pedido) {
-                    contenedor.innerHTML = `<div class="error-state"><h3>Pedido no encontrado</h3><p>Verifica el código ingresado</p></div>`;
+                    contenedor.innerHTML = `<div class="error-message"><h3>Pedido no encontrado</h3><p>Verifica el código ingresado</p></div>`;
                     return;
                 }
 
@@ -397,7 +350,7 @@
                 const etapaActual = pedido.currentStage;
                 const indiceActual = etapas.indexOf(etapaActual);
                 const posicionCola = calcularPosicionCola(pedido.trackingCode);
-                const tiempoEstimado = calcularTiempoEstimado(posicionCola, pedido.priority);
+                const tiempoEstimado = calcularTiempoEstimado(posicionCola);
                 const fechaCreacion = new Date(pedido.createdAt);
                 const fechaStr = `${fechaCreacion.getDate()}/${fechaCreacion.getMonth()+1}/${fechaCreacion.getFullYear()}`;
                 const totalActivos = pedidos.filter(p => p.currentStage !== 'Entregado').length;
@@ -408,10 +361,14 @@
                     const completada = i < indiceActual;
                     const actual = i === indiceActual;
                     
+                    let icono = '○';
+                    if (completada) icono = '✓';
+                    else if (actual) icono = '●';
+                    
                     timelineHtml += `
                         <div class="timeline-item">
                             <div class="timeline-icon ${completada ? 'completed' : (actual ? 'current' : 'pending')}">
-                                ${completada ? '✓' : (actual ? '◉' : '○')}
+                                ${icono}
                             </div>
                             <div class="timeline-content">
                                 <div class="timeline-stage ${actual ? 'current' : ''}">${etapa}</div>
@@ -421,37 +378,31 @@
                     `;
                 }
 
-                const priorityBadge = pedido.priority === 'Urgente' 
-                    ? '<div class="priority-badge">🚨 Prioridad urgente</div>' 
-                    : '<div class="priority-badge">📋 Prioridad normal</div>';
-
                 contenedor.innerHTML = `
-                    <div class="card">
-                        <div class="tracking-code">CÓDIGO: ${pedido.trackingCode}</div>
+                    <div class="info-card">
+                        <div class="tracking-code">📦 CÓDIGO: ${pedido.trackingCode}</div>
                         <div class="customer-name">${pedido.customerName}</div>
-                        <div class="product-info">${pedido.productType} · Talla ${pedido.size}</div>
-                        <div class="product-info">Color: ${pedido.color || 'No especificado'}</div>
-                        <div class="product-info">Diseño: ${pedido.design || 'Sin diseño'}</div>
-                        <div class="price-info">Total: $${pedido.amountUsd || '0.00'} · Pedido: ${fechaStr}</div>
+                        <div class="product-info">📌 ${pedido.productType} · Talla ${pedido.size}</div>
+                        <div class="product-info">🎨 Color: ${pedido.color || 'No especificado'}</div>
+                        <div class="product-info">✏️ Diseño: ${pedido.design || 'Sin diseño'}</div>
+                        <div class="price-info">💰 Total: $${pedido.amountUsd || '0.00'} · 📅 ${fechaStr}</div>
                     </div>
                     
-                    <div class="card queue-card">
-                        <div class="queue-title">
-                            <span>📊</span> POSICIÓN EN COLA DE PRODUCCIÓN
-                        </div>
+                    <div class="queue-card">
+                        <div class="queue-title">📊 POSICIÓN EN COLA</div>
                         <div class="queue-position">#${posicionCola}</div>
                         <div class="queue-label">de ${totalActivos} pedidos activos</div>
                         <div class="estimated-time">
                             ⏱️ <span>Tiempo estimado de entrega:</span><br>
                             ${tiempoEstimado}
                         </div>
-                        ${priorityBadge}
+                        <div class="priority-badge">
+                            ${pedido.priority === 'Urgente' ? '🚨 Prioridad urgente' : '📋 Prioridad normal'}
+                        </div>
                     </div>
                     
-                    <div class="card">
-                        <div class="timeline-title">
-                            <span>📋</span> Progreso del pedido
-                        </div>
+                    <div class="timeline">
+                        <div class="timeline-title">📋 Progreso del pedido</div>
                         ${timelineHtml}
                     </div>
                 `;
@@ -463,23 +414,23 @@
             return urlParams.get(p);
         }
 
-        (async () => {
-            await cargarPedidos();
-            setInterval(cargarPedidos, 60000); // recargar cada minuto
-            
-            const codigoParam = obtenerParametro('code');
-            if (codigoParam) {
-                document.getElementById('trackingCode').value = codigoParam;
-                setTimeout(buscarPedido, 500);
-            } else {
-                document.getElementById('contenido').innerHTML = `
-                    <div class="empty-state">
-                        <h3>Seguimiento de pedidos</h3>
-                        <p>Ingresa tu código de seguimiento<br>para ver el estado de tu pedido</p>
-                    </div>
-                `;
-            }
-        })();
+        cargarPedidos();
+        setInterval(cargarPedidos, 60000);
+        
+        const codigoParam = obtenerParametro('code');
+        if (codigoParam) {
+            document.getElementById('trackingCode').value = codigoParam;
+            setTimeout(buscarPedido, 1000);
+        } else {
+            document.getElementById('contenido').innerHTML = `
+                <div class="initial-message">
+                    <h3>Seguimiento de pedidos</h3>
+                    <p>Ingresa tu código de seguimiento<br>para ver el estado de tu pedido</p>
+                </div>
+            `;
+        }
     </script>
+</body>
+</html>    
 </body>
 </html>
