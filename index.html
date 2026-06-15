@@ -5,82 +5,205 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Kemzi Studio - Seguimiento de Pedidos</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background: #1D1D1D;
-            min-height: 100vh;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container { max-width: 500px; margin: 0 auto; }
-        .header {
-            background: #2A2A2A;
-            border-radius: 20px;
+
+        body {
+            background-color: #1D1D1D;
+            font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
             padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
             text-align: center;
             margin-bottom: 24px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #2A2A2A;
+            padding: 12px 24px;
+            border-radius: 60px;
             border: 1px solid rgba(0, 204, 188, 0.2);
         }
-        .logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px; }
-        .logo-icon { background: rgba(0, 204, 188, 0.15); padding: 10px; border-radius: 14px; }
-        .logo h1 { color: white; font-size: 20px; }
-        .header p { color: #A5A5A5; font-size: 13px; }
+
+        .logo-icon {
+            font-size: 24px;
+        }
+
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .header p {
+            color: #A5A5A5;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* Buscador */
         .search-box {
             background: #2A2A2A;
-            border-radius: 16px;
-            padding: 6px;
+            border-radius: 60px;
+            padding: 4px;
             display: flex;
-            gap: 10px;
-            margin-bottom: 24px;
+            gap: 8px;
             border: 1px solid rgba(0, 204, 188, 0.2);
+            margin-bottom: 24px;
         }
+
         .search-box input {
             flex: 1;
             background: transparent;
             border: none;
-            padding: 12px 16px;
+            padding: 12px 18px;
             color: white;
+            font-size: 14px;
             outline: none;
         }
-        .search-box input::placeholder { color: #666; }
+
+        .search-box input::placeholder {
+            color: #666;
+        }
+
         .search-box button {
             background: #00CCBC;
             border: none;
-            border-radius: 12px;
-            padding: 0 20px;
-            color: white;
+            border-radius: 40px;
+            padding: 0 22px;
+            color: #1D1D1D;
             font-weight: 600;
             cursor: pointer;
+            transition: opacity 0.2s;
         }
-        .info-card, .timeline, .queue-card {
+
+        .search-box button:active {
+            opacity: 0.8;
+        }
+
+        /* Tarjetas */
+        .card {
             background: #2A2A2A;
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
+            border: 1px solid rgba(0, 204, 188, 0.1);
         }
-        .tracking-code { color: #00CCBC; font-size: 12px; margin-bottom: 12px; }
-        .customer-name { color: white; font-size: 20px; font-weight: bold; margin-bottom: 6px; }
-        .product-info { color: #A5A5A5; font-size: 13px; margin-bottom: 4px; }
-        .price-info { color: #A5A5A5; margin-top: 8px; padding-top: 8px; border-top: 1px solid #3A3A3A; }
-        
+
+        .tracking-code {
+            color: #00CCBC;
+            font-size: 12px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .customer-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .product-info {
+            color: #A5A5A5;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .price-info {
+            color: #A5A5A5;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #3A3A3A;
+            font-size: 13px;
+        }
+
+        /* Tarjeta de cola */
         .queue-card {
-            background: linear-gradient(135deg, #00CCBC20, #008B7A10);
-            border: 1px solid #00CCBC40;
+            background: linear-gradient(135deg, rgba(0, 204, 188, 0.12), rgba(0, 139, 122, 0.05));
+            border: 1px solid rgba(0, 204, 188, 0.3);
         }
-        .queue-title { color: #00CCBC; font-size: 14px; font-weight: 600; margin-bottom: 16px; }
-        .queue-position { font-size: 48px; font-weight: bold; color: #00CCBC; text-align: center; margin: 10px 0; }
-        .queue-label { color: #A5A5A5; font-size: 12px; text-align: center; }
+
+        .queue-title {
+            color: #00CCBC;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .queue-position {
+            font-size: 48px;
+            font-weight: 800;
+            color: #00CCBC;
+            text-align: center;
+            margin: 10px 0;
+            line-height: 1;
+        }
+
+        .queue-label {
+            color: #A5A5A5;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
         .estimated-time {
-            background: #00CCBC20;
-            border-radius: 20px;
+            background: rgba(0, 204, 188, 0.1);
+            border-radius: 16px;
             padding: 12px;
             text-align: center;
-            margin-top: 16px;
+            margin-top: 8px;
         }
-        .estimated-time span { color: #00CCBC; font-weight: bold; }
-        
-        .timeline-title { color: white; font-size: 16px; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #3A3A3A; }
-        .timeline-item { display: flex; margin-bottom: 20px; position: relative; }
+
+        .estimated-time span {
+            color: #00CCBC;
+            font-weight: 600;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 11px;
+            background: rgba(0, 204, 188, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #00CCBC;
+        }
+
+        /* Timeline */
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #3A3A3A;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
         .timeline-item:not(:last-child)::before {
             content: '';
             position: absolute;
@@ -90,6 +213,7 @@
             width: 2px;
             background: #3A3A3A;
         }
+
         .timeline-icon {
             width: 32px;
             height: 32px;
@@ -99,26 +223,91 @@
             justify-content: center;
             margin-right: 14px;
             z-index: 1;
+            font-size: 14px;
+            background: #2A2A2A;
+            border: 2px solid #4A4A4A;
+            color: #A5A5A5;
         }
-        .timeline-icon.completed { background: #00CCBC; }
-        .timeline-icon.pending { background: #2A2A2A; border: 2px solid #4A4A4A; }
-        .timeline-icon.current { background: #00CCBC; box-shadow: 0 0 0 4px rgba(0, 204, 188, 0.2); }
-        .timeline-stage { color: white; font-size: 14px; font-weight: 500; }
-        .timeline-stage.current { color: #00CCBC; }
-        .timeline-status { font-size: 11px; color: #A5A5A5; margin-top: 4px; }
-        .error-message, .initial-message { background: #2A2A2A; border-radius: 20px; padding: 40px 20px; text-align: center; }
-        .error-message h3, .initial-message h3 { color: white; margin-bottom: 8px; }
-        .loader { display: flex; justify-content: center; padding: 60px; }
-        .spinner { width: 40px; height: 40px; border: 3px solid #2A2A2A; border-top-color: #00CCBC; border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .sync-status { font-size: 10px; color: #666; text-align: center; margin-top: 16px; }
+
+        .timeline-icon.completed {
+            background: #00CCBC;
+            border-color: #00CCBC;
+            color: #1D1D1D;
+        }
+
+        .timeline-icon.current {
+            background: #00CCBC;
+            border-color: #00CCBC;
+            color: #1D1D1D;
+            box-shadow: 0 0 0 3px rgba(0, 204, 188, 0.2);
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-stage {
+            font-size: 14px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .timeline-stage.current {
+            color: #00CCBC;
+        }
+
+        .timeline-status {
+            font-size: 11px;
+            color: #A5A5A5;
+            margin-top: 4px;
+        }
+
+        /* Estados vacíos y error */
+        .empty-state, .error-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: #2A2A2A;
+            border-radius: 20px;
+            color: #A5A5A5;
+        }
+
+        .empty-state h3, .error-state h3 {
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .loader {
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2A2A2A;
+            border-top-color: #00CCBC;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .sync-status {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            margin-top: 16px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">
-                <div class="logo-icon">📦</div>
+                <span class="logo-icon">📦</span>
                 <h1>Kemzi Studio</h1>
             </div>
             <p>Seguimiento de pedidos</p>
@@ -163,7 +352,8 @@
             return posicion >= 0 ? posicion + 1 : -1;
         }
 
-        function calcularTiempoEstimado(posicion) {
+        function calcularTiempoEstimado(posicion, prioridad) {
+            if (prioridad === 'Urgente') return 'Prioridad urgente - Se atenderá antes';
             const dias = (posicion - 1) * 1.5;
             if (dias <= 0) return 'En proceso, pronto estará listo';
             if (dias < 1) return 'Menos de 1 día';
@@ -173,11 +363,12 @@
 
         async function cargarPedidos() {
             try {
-                document.getElementById('estadoSincronizacion').innerHTML = '🔄 Cargando datos...';
+                const statusDiv = document.getElementById('estadoSincronizacion');
+                statusDiv.innerHTML = '🔄 Cargando datos...';
                 const respuesta = await fetch('orders.json?v=' + Date.now());
                 if (!respuesta.ok) throw new Error('No se encontró orders.json');
                 pedidos = await respuesta.json();
-                document.getElementById('estadoSincronizacion').innerHTML = `✅ ${pedidos.length} pedidos · ${new Date().toLocaleTimeString()}`;
+                statusDiv.innerHTML = `✅ ${pedidos.length} pedidos · ${new Date().toLocaleTimeString()}`;
             } catch(e) {
                 document.getElementById('estadoSincronizacion').innerHTML = '⚠️ Error al cargar datos';
             }
@@ -188,7 +379,7 @@
             const contenedor = document.getElementById('contenido');
             
             if (!codigo) {
-                contenedor.innerHTML = `<div class="error-message"><h3>Ingresa un código</h3><p>Ej: KEMZI-123456</p></div>`;
+                contenedor.innerHTML = `<div class="empty-state"><h3>Ingresa un código</h3><p>Ej: KEMZI-123456</p></div>`;
                 return;
             }
 
@@ -198,7 +389,7 @@
                 const pedido = pedidos.find(p => p.trackingCode === codigo);
                 
                 if (!pedido) {
-                    contenedor.innerHTML = `<div class="error-message"><h3>Pedido no encontrado</h3><p>Verifica el código ingresado</p></div>`;
+                    contenedor.innerHTML = `<div class="error-state"><h3>Pedido no encontrado</h3><p>Verifica el código ingresado</p></div>`;
                     return;
                 }
 
@@ -206,7 +397,7 @@
                 const etapaActual = pedido.currentStage;
                 const indiceActual = etapas.indexOf(etapaActual);
                 const posicionCola = calcularPosicionCola(pedido.trackingCode);
-                const tiempoEstimado = calcularTiempoEstimado(posicionCola);
+                const tiempoEstimado = calcularTiempoEstimado(posicionCola, pedido.priority);
                 const fechaCreacion = new Date(pedido.createdAt);
                 const fechaStr = `${fechaCreacion.getDate()}/${fechaCreacion.getMonth()+1}/${fechaCreacion.getFullYear()}`;
                 const totalActivos = pedidos.filter(p => p.currentStage !== 'Entregado').length;
@@ -230,8 +421,12 @@
                     `;
                 }
 
+                const priorityBadge = pedido.priority === 'Urgente' 
+                    ? '<div class="priority-badge">🚨 Prioridad urgente</div>' 
+                    : '<div class="priority-badge">📋 Prioridad normal</div>';
+
                 contenedor.innerHTML = `
-                    <div class="info-card">
+                    <div class="card">
                         <div class="tracking-code">CÓDIGO: ${pedido.trackingCode}</div>
                         <div class="customer-name">${pedido.customerName}</div>
                         <div class="product-info">${pedido.productType} · Talla ${pedido.size}</div>
@@ -240,21 +435,23 @@
                         <div class="price-info">Total: $${pedido.amountUsd || '0.00'} · Pedido: ${fechaStr}</div>
                     </div>
                     
-                    <div class="queue-card">
-                        <div class="queue-title">📊 POSICIÓN EN COLA DE PRODUCCIÓN</div>
+                    <div class="card queue-card">
+                        <div class="queue-title">
+                            <span>📊</span> POSICIÓN EN COLA DE PRODUCCIÓN
+                        </div>
                         <div class="queue-position">#${posicionCola}</div>
                         <div class="queue-label">de ${totalActivos} pedidos activos</div>
                         <div class="estimated-time">
                             ⏱️ <span>Tiempo estimado de entrega:</span><br>
                             ${tiempoEstimado}
                         </div>
-                        <div style="font-size: 11px; color: #666; text-align: center; margin-top: 12px;">
-                            ${pedido.priority === 'Urgente' ? '🚨 Prioridad urgente - Se atenderá antes' : '📋 Prioridad normal'}
-                        </div>
+                        ${priorityBadge}
                     </div>
                     
-                    <div class="timeline">
-                        <div class="timeline-title">📦 Progreso del pedido</div>
+                    <div class="card">
+                        <div class="timeline-title">
+                            <span>📋</span> Progreso del pedido
+                        </div>
                         ${timelineHtml}
                     </div>
                 `;
@@ -266,21 +463,23 @@
             return urlParams.get(p);
         }
 
-        cargarPedidos();
-        setInterval(cargarPedidos, 60000);
-        
-        const codigoParam = obtenerParametro('code');
-        if (codigoParam) {
-            document.getElementById('trackingCode').value = codigoParam;
-            setTimeout(buscarPedido, 1000);
-        } else {
-            document.getElementById('contenido').innerHTML = `
-                <div class="initial-message">
-                    <h3>Seguimiento de pedidos</h3>
-                    <p>Ingresa tu código de seguimiento<br>para ver el estado de tu pedido</p>
-                </div>
-            `;
-        }
+        (async () => {
+            await cargarPedidos();
+            setInterval(cargarPedidos, 60000); // recargar cada minuto
+            
+            const codigoParam = obtenerParametro('code');
+            if (codigoParam) {
+                document.getElementById('trackingCode').value = codigoParam;
+                setTimeout(buscarPedido, 500);
+            } else {
+                document.getElementById('contenido').innerHTML = `
+                    <div class="empty-state">
+                        <h3>Seguimiento de pedidos</h3>
+                        <p>Ingresa tu código de seguimiento<br>para ver el estado de tu pedido</p>
+                    </div>
+                `;
+            }
+        })();
     </script>
 </body>
-</html>    
+</html>
