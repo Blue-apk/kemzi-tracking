@@ -392,7 +392,7 @@
 
     <script>
         // ============================================================
-        //  URL DEL JSON EN GITHUB (REPOSITORIO PÚBLICO)
+        //  URL DEL JSON EN GITHUB
         // ============================================================
         const ORDERS_JSON_URL = 'https://raw.githubusercontent.com/blue-apk/kemzi-tracking/main/orders.json';
 
@@ -425,7 +425,7 @@
             'Control de calidad': 6,
             'Listo para entregar': 7,
             'Enviado': 8,
-            'Entregado': 8,
+            'Entregado': 8,   // Entregado = etapa final (8)
             'Cancelado': -1
         };
 
@@ -470,7 +470,6 @@
                 return;
             }
 
-            // Buscar pedido por trackingCode
             const pedido = pedidos.find(p => 
                 (p.trackingCode || p.codigo || '').toUpperCase() === codigo
             );
@@ -495,10 +494,12 @@
         function renderizarPedido(pedido, codigo) {
             const container = document.getElementById('orderContent');
 
-            // Mapear estado a etapa
             const status = pedido.status || 'En espera de abono';
-            const etapaActual = estadoMap[status] !== undefined ? estadoMap[status] : 0;
             const isCancelado = status === 'Cancelado';
+            const isEntregado = status === 'Entregado';
+
+            // 📱 Número de WhatsApp de Kemzi Studio (cambia por el real)
+            const telefono = '584243066032'; // ← REEMPLAZA CON EL NÚMERO REAL
 
             // Badge de estado
             let statusClass = 'status-pendiente';
@@ -506,18 +507,21 @@
             if (isCancelado) {
                 statusClass = 'status-cancelado';
                 statusText = 'Cancelado';
-            } else if (status === 'Entregado' || status === 'Enviado') {
+            } else if (isEntregado) {
                 statusClass = 'status-entregado';
-                statusText = status === 'Entregado' ? 'Entregado' : 'Enviado';
-            } else if (status === 'En diseño' || status === 'Diseño aprobado' || 
-                       status === 'En impresión' || status === 'En planchado' || 
-                       status === 'En confección' || status === 'Control de calidad' ||
-                       status === 'Listo para entregar') {
+                statusText = '✅ Entregado';
+            } else if (status === 'Enviado') {
+                statusClass = 'status-enviado';
+                statusText = '🚚 Enviado';
+            } else if (status === 'Pagado' || status === 'En espera de abono') {
+                statusClass = 'status-pendiente';
+                statusText = status === 'Pagado' ? 'Pagado' : 'Pendiente';
+            } else {
                 statusClass = 'status-produccion';
-                statusText = status;
+                statusText = '⚙️ ' + status;
             }
 
-            // Obtener datos
+            // Datos
             const cliente = pedido.customerName || pedido.cliente || 'Sin nombre';
             const producto = pedido.productType || pedido.producto || 'Sin producto';
             const talla = pedido.size || pedido.talla || '';
@@ -525,24 +529,34 @@
             const diseno = pedido.design || pedido.detalles || '';
             const totalUSD = pedido.amountUsd || 0;
             const fechaRegistro = pedido.createdAt || pedido.fechaRegistro || new Date().toISOString();
-            const telefono = pedido.telefono || '584243066032';
-
-            // Posición en cola (si existe)
             const posicion = pedido.posicionCola || 1;
-            const totalEnCola = 7; // Valor por defecto
+            const totalEnCola = 7;
 
-            // Calcular progreso (no aplicar si cancelado)
+            // Calcular etapa actual
+            let etapaActual = estadoMap[status];
+            if (isCancelado) etapaActual = -1;
+            if (isEntregado) etapaActual = 8; // Todos los pasos completados
+
+            // Progreso de cola
             const progresoCola = isCancelado ? 0 : ((totalEnCola - posicion + 1) / totalEnCola) * 100;
 
-            // Timeline
+            // ============================================================
+            //  TIMELINE
+            // ============================================================
             let timelineHtml = '';
+
             if (isCancelado) {
                 timelineHtml = `<div style="text-align:center; padding:20px; color:#c62828;">❌ Pedido cancelado</div>`;
             } else {
                 for (let i = 0; i < etapas.length; i++) {
                     let indicatorClass = '';
                     let statusTextTimeline = '';
-                    if (i < etapaActual) {
+
+                    if (isEntregado) {
+                        // Si está entregado, todo completado
+                        indicatorClass = 'done';
+                        statusTextTimeline = 'Completado';
+                    } else if (i < etapaActual) {
                         indicatorClass = 'done';
                         statusTextTimeline = 'Completado';
                     } else if (i === etapaActual) {
@@ -552,7 +566,7 @@
                         statusTextTimeline = 'Pendiente';
                     }
 
-                    const icon = i < etapaActual ? '✓' : (i === etapaActual ? '●' : '○');
+                    const icon = (indicatorClass === 'done') ? '✓' : (indicatorClass === 'active' ? '●' : '○');
 
                     timelineHtml += `
                         <div class="step">
@@ -566,6 +580,9 @@
                 }
             }
 
+            // ============================================================
+            //  RENDERIZAR HTML
+            // ============================================================
             container.innerHTML = `
                 <div class="order-card">
                     <div class="order-header">
@@ -604,6 +621,12 @@
                     </div>
                     ` : ''}
 
+                    ${isEntregado ? `
+                    <div style="text-align:center; margin-top:16px; padding:12px; background:#e8f5e9; border-radius:16px; color:#2e7d32;">
+                        ✅ ¡Pedido entregado con éxito! Gracias por confiar en nosotros. 🙌
+                    </div>
+                    ` : ''}
+
                     <a href="https://wa.me/${telefono}?text=Hola%2C%20tengo%20una%20consulta%20sobre%20mi%20pedido%20${codigo}" target="_blank" class="whatsapp-btn">
                         💬 Contactar por WhatsApp
                     </a>
@@ -621,7 +644,6 @@
             buscarPedido();
         }
 
-        // Buscar al presionar Enter
         document.getElementById('searchInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') buscarPedido();
         });
