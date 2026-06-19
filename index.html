@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Kemzi Studio · Seguimiento</title>
     <style>
-        /* ========== RESET Y BASE ========== */
         * {
             margin: 0;
             padding: 0;
@@ -27,7 +26,6 @@
             width: 100%;
         }
 
-        /* ========== HEADER ========== */
         .header {
             text-align: center;
             margin-bottom: 28px;
@@ -50,7 +48,6 @@
             margin-top: 2px;
         }
 
-        /* ========== BUSCADOR ========== */
         .search-card {
             background: #ffffff;
             border-radius: 32px;
@@ -93,7 +90,6 @@
             opacity: 0.8;
         }
 
-        /* ========== TARJETA DE PEDIDO ========== */
         .order-card {
             background: #ffffff;
             border-radius: 28px;
@@ -354,6 +350,12 @@
             margin-top: 20px;
         }
 
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #A5A5A5;
+        }
+
         @media (max-width: 480px) {
             body { padding: 12px 12px; }
             .order-card { padding: 18px 16px; }
@@ -390,59 +392,13 @@
 
     <script>
         // ============================================================
-        //  BASE DE DATOS DE EJEMPLO (conectar con API real después)
+        //  URL DEL JSON EN GITHUB (REPOSITORIO PÚBLICO)
         // ============================================================
-        const pedidosDB = {
-            "KEMZI-723908": {
-                cliente: "Claudia del Vecchio",
-                producto: "Chaquetas",
-                talla: "L",
-                color: "Diseño personalizado",
-                diseño: "Diseño personalizado",
-                totalUSD: 25,
-                fechaRegistro: "4/6/2026",
-                posicionCola: 5,
-                totalEnCola: 7,
-                etapaActual: 4,
-                prioridad: "Normal",
-                tiempoEstimadoDias: 6,
-                estado: "En producción",
-                telefono: "584141234567"
-            },
-            "KEMZI-896663": {
-                cliente: "Andy",
-                producto: "Lanyard Premium",
-                talla: "No aplica",
-                color: "Negros",
-                diseño: "Diseño personalizado",
-                totalUSD: 18,
-                fechaRegistro: "9/6/2026",
-                posicionCola: 3,
-                totalEnCola: 7,
-                etapaActual: 1,
-                prioridad: "Normal",
-                tiempoEstimadoDias: 4,
-                estado: "En diseño",
-                telefono: "584141234568"
-            },
-            "KEMZI-675123": {
-                cliente: "Pires Cars",
-                producto: "Chaquetas",
-                talla: "M",
-                color: "diseño personalizado",
-                diseño: "",
-                totalUSD: 25,
-                fechaRegistro: "4/6/2026",
-                posicionCola: 2,
-                totalEnCola: 7,
-                etapaActual: 4,
-                prioridad: "Normal",
-                tiempoEstimadoDias: 5,
-                estado: "En planchado",
-                telefono: "584141234569"
-            }
-        };
+        const ORDERS_JSON_URL = 'https://raw.githubusercontent.com/blue-apk/kemzi-tracking/main/orders.json';
 
+        // ============================================================
+        //  ETAPAS DEL PROCESO
+        // ============================================================
         const etapas = [
             "Abono recibido",
             "En diseño",
@@ -455,13 +411,69 @@
             "Entregado"
         ];
 
-        function buscarPedido() {
+        // ============================================================
+        //  MAPA DE ESTADOS A ETAPAS
+        // ============================================================
+        const estadoMap = {
+            'En espera de abono': 0,
+            'Pagado': 0,
+            'En diseño': 1,
+            'Diseño aprobado': 2,
+            'En impresión': 3,
+            'En planchado': 4,
+            'En confección': 5,
+            'Control de calidad': 6,
+            'Listo para entregar': 7,
+            'Enviado': 8,
+            'Entregado': 8,
+            'Cancelado': -1
+        };
+
+        // ============================================================
+        //  OBTENER PEDIDOS DESDE GITHUB
+        // ============================================================
+        async function obtenerPedidosDesdeGitHub() {
+            try {
+                const response = await fetch(ORDERS_JSON_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error al descargar pedidos:', error);
+                return null;
+            }
+        }
+
+        // ============================================================
+        //  BUSCAR PEDIDO
+        // ============================================================
+        async function buscarPedido() {
             const input = document.getElementById('searchInput');
             const codigo = input.value.trim().toUpperCase();
             if (!codigo) return;
 
-            const pedido = pedidosDB[codigo];
             const container = document.getElementById('orderContent');
+            container.innerHTML = `<div class="loading">⏳ Cargando pedido...</div>`;
+
+            const pedidos = await obtenerPedidosDesdeGitHub();
+            if (!pedidos) {
+                container.innerHTML = `
+                    <div class="order-card empty-state">
+                        <div class="emoji">❌</div>
+                        <h3>Error de conexión</h3>
+                        <p>No se pudo cargar la lista de pedidos. Verifica tu conexión.</p>
+                        <button class="search-btn" style="margin-top:16px;" onclick="buscarPedido()">Reintentar</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Buscar pedido por trackingCode
+            const pedido = pedidos.find(p => 
+                (p.trackingCode || p.codigo || '').toUpperCase() === codigo
+            );
 
             if (!pedido) {
                 container.innerHTML = `
@@ -474,89 +486,134 @@
                 return;
             }
 
-            container.innerHTML = renderizarPedido(pedido, codigo);
+            renderizarPedido(pedido, codigo);
         }
 
+        // ============================================================
+        //  RENDERIZAR PEDIDO
+        // ============================================================
         function renderizarPedido(pedido, codigo) {
-            const estado = pedido.estado || 'Pendiente';
+            const container = document.getElementById('orderContent');
+
+            // Mapear estado a etapa
+            const status = pedido.status || 'En espera de abono';
+            const etapaActual = estadoMap[status] !== undefined ? estadoMap[status] : 0;
+            const isCancelado = status === 'Cancelado';
+
+            // Badge de estado
             let statusClass = 'status-pendiente';
-            const e = estado.toLowerCase();
-            if (e.includes('producción') || e.includes('planchado') || e.includes('impresión') || e.includes('confección')) statusClass = 'status-produccion';
-            else if (e.includes('entregado')) statusClass = 'status-entregado';
-            else if (e.includes('enviado')) statusClass = 'status-enviado';
-            else if (e.includes('cancelado')) statusClass = 'status-cancelado';
-
-            const etapaActual = pedido.etapaActual ?? 0;
-            const progresoCola = ((pedido.totalEnCola - pedido.posicionCola + 1) / pedido.totalEnCola) * 100;
-
-            let timelineHtml = '';
-            for (let i = 0; i < etapas.length; i++) {
-                let indicatorClass = '';
-                let statusText = '';
-                if (i < etapaActual) {
-                    indicatorClass = 'done';
-                    statusText = 'Completado';
-                } else if (i === etapaActual) {
-                    indicatorClass = 'active';
-                    statusText = 'En proceso';
-                } else {
-                    statusText = 'Pendiente';
-                }
-
-                const icon = i < etapaActual ? '✓' : (i === etapaActual ? '●' : '○');
-
-                timelineHtml += `
-                    <div class="step">
-                        <div class="step-indicator ${indicatorClass}">${icon}</div>
-                        <div class="step-info">
-                            <div class="step-name">${etapas[i]}</div>
-                            <div class="step-status-text ${indicatorClass}">${statusText}</div>
-                        </div>
-                    </div>
-                `;
+            let statusText = status;
+            if (isCancelado) {
+                statusClass = 'status-cancelado';
+                statusText = 'Cancelado';
+            } else if (status === 'Entregado' || status === 'Enviado') {
+                statusClass = 'status-entregado';
+                statusText = status === 'Entregado' ? 'Entregado' : 'Enviado';
+            } else if (status === 'En diseño' || status === 'Diseño aprobado' || 
+                       status === 'En impresión' || status === 'En planchado' || 
+                       status === 'En confección' || status === 'Control de calidad' ||
+                       status === 'Listo para entregar') {
+                statusClass = 'status-produccion';
+                statusText = status;
             }
 
-            return `
+            // Obtener datos
+            const cliente = pedido.customerName || pedido.cliente || 'Sin nombre';
+            const producto = pedido.productType || pedido.producto || 'Sin producto';
+            const talla = pedido.size || pedido.talla || '';
+            const color = pedido.color || '';
+            const diseno = pedido.design || pedido.detalles || '';
+            const totalUSD = pedido.amountUsd || 0;
+            const fechaRegistro = pedido.createdAt || pedido.fechaRegistro || new Date().toISOString();
+            const telefono = pedido.telefono || '584141234567';
+
+            // Posición en cola (si existe)
+            const posicion = pedido.posicionCola || 1;
+            const totalEnCola = 7; // Valor por defecto
+
+            // Calcular progreso (no aplicar si cancelado)
+            const progresoCola = isCancelado ? 0 : ((totalEnCola - posicion + 1) / totalEnCola) * 100;
+
+            // Timeline
+            let timelineHtml = '';
+            if (isCancelado) {
+                timelineHtml = `<div style="text-align:center; padding:20px; color:#c62828;">❌ Pedido cancelado</div>`;
+            } else {
+                for (let i = 0; i < etapas.length; i++) {
+                    let indicatorClass = '';
+                    let statusTextTimeline = '';
+                    if (i < etapaActual) {
+                        indicatorClass = 'done';
+                        statusTextTimeline = 'Completado';
+                    } else if (i === etapaActual) {
+                        indicatorClass = 'active';
+                        statusTextTimeline = 'En proceso';
+                    } else {
+                        statusTextTimeline = 'Pendiente';
+                    }
+
+                    const icon = i < etapaActual ? '✓' : (i === etapaActual ? '●' : '○');
+
+                    timelineHtml += `
+                        <div class="step">
+                            <div class="step-indicator ${indicatorClass}">${icon}</div>
+                            <div class="step-info">
+                                <div class="step-name">${etapas[i]}</div>
+                                <div class="step-status-text ${indicatorClass}">${statusTextTimeline}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            container.innerHTML = `
                 <div class="order-card">
                     <div class="order-header">
                         <span class="order-code">📦 ${codigo}</span>
-                        <span class="order-status ${statusClass}">${estado}</span>
+                        <span class="order-status ${statusClass}">${statusText}</span>
                     </div>
 
-                    <div class="client-name">${pedido.cliente}</div>
-                    <div class="product-detail"><span class="label">Producto:</span> ${pedido.producto} · Talla ${pedido.talla}</div>
-                    <div class="product-detail"><span class="label">Color:</span> ${pedido.color}</div>
-                    ${pedido.diseño ? `<div class="product-detail"><span class="label">Diseño:</span> ${pedido.diseño}</div>` : ''}
+                    <div class="client-name">${cliente}</div>
+                    <div class="product-detail"><span class="label">Producto:</span> ${producto} ${talla ? '· Talla ' + talla : ''}</div>
+                    ${color ? `<div class="product-detail"><span class="label">Color:</span> ${color}</div>` : ''}
+                    ${diseno ? `<div class="product-detail"><span class="label">Diseño:</span> ${diseno}</div>` : ''}
 
                     <div class="info-row">
                         <span class="info-label">Total</span>
-                        <span class="info-value">\$${pedido.totalUSD} · ${pedido.fechaRegistro}</span>
+                        <span class="info-value">\$${totalUSD} · ${new Date(fechaRegistro).toLocaleDateString('es-ES')}</span>
                     </div>
 
+                    ${!isCancelado ? `
                     <div class="queue-section">
-                        <div class="queue-number">#${pedido.posicionCola}</div>
-                        <div class="queue-label">de ${pedido.totalEnCola} pedidos activos</div>
+                        <div class="queue-number">#${posicion}</div>
+                        <div class="queue-label">de ${totalEnCola} pedidos activos</div>
                         <div class="progress-bar-track">
                             <div class="progress-bar-fill" style="width: ${Math.min(100, progresoCola)}%;"></div>
                         </div>
                         <div class="queue-meta">
-                            <span>⏱️ ${pedido.tiempoEstimadoDias} días estimados</span>
-                            <span>⚡ ${pedido.prioridad}</span>
+                            <span>⏱️ ${pedido.tiempoEstimadoDias || 6} días estimados</span>
+                            <span>⚡ ${pedido.prioridad || 'Normal'}</span>
                         </div>
                     </div>
+                    ` : ''}
 
+                    ${!isCancelado ? `
                     <div class="timeline">
                         <div class="timeline-title">📋 Progreso del pedido</div>
                         ${timelineHtml}
                     </div>
+                    ` : ''}
 
-                    <a href="https://wa.me/${pedido.telefono}?text=Hola%2C%20tengo%20una%20consulta%20sobre%20mi%20pedido%20${codigo}" target="_blank" class="whatsapp-btn">
+                    <a href="https://wa.me/${telefono}?text=Hola%2C%20tengo%20una%20consulta%20sobre%20mi%20pedido%20${codigo}" target="_blank" class="whatsapp-btn">
                         💬 Contactar por WhatsApp
                     </a>
                 </div>
             `;
         }
 
+        // ============================================================
+        //  DETECTAR CÓDIGO EN URL
+        // ============================================================
         const urlParams = new URLSearchParams(window.location.search);
         const codeFromUrl = urlParams.get('code');
         if (codeFromUrl) {
@@ -564,6 +621,7 @@
             buscarPedido();
         }
 
+        // Buscar al presionar Enter
         document.getElementById('searchInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') buscarPedido();
         });
