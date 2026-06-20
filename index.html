@@ -550,7 +550,6 @@
             const isCancelado = status === 'Cancelado';
             const isEntregado = status === 'Entregado';
 
-            // Badge de estado
             let statusClass = 'status-pendiente';
             let statusText = status;
             if (isCancelado) {
@@ -570,7 +569,6 @@
                 statusText = '⚙️ ' + status;
             }
 
-            // Datos
             const cliente = pedido.customerName || pedido.cliente || 'Sin nombre';
             const producto = pedido.productType || pedido.producto || 'Sin producto';
             const talla = pedido.size || pedido.talla || '';
@@ -580,20 +578,13 @@
             const fechaRegistro = pedido.createdAt || pedido.fechaRegistro || new Date().toISOString();
             const tipoEntrega = pedido.tipoEntrega || 'Delivery';
 
-            // Calcular etapa actual
             let etapaActual = estadoMap[status];
             if (isCancelado) etapaActual = -1;
             if (isEntregado) etapaActual = 8;
 
-            // Progreso de cola
             const progresoCola = isCancelado ? 0 : ((totalEnCola - posicionCola + 1) / totalEnCola) * 100;
-
-            // Tiempo estimado (días)
             const tiempoEstimado = posicionCola * 1.5;
 
-            // ============================================================
-            //  TIMELINE
-            // ============================================================
             let timelineHtml = '';
 
             if (isCancelado) {
@@ -630,9 +621,6 @@
                 }
             }
 
-            // ============================================================
-            //  RENDERIZAR HTML
-            // ============================================================
             container.innerHTML = `
                 <div class="order-card">
                     <div class="order-header">
@@ -703,4 +691,4 @@
         });
     </script>
 </body>
-</html>
+</html>    
